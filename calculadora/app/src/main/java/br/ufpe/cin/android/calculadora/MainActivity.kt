@@ -2,12 +2,45 @@ package br.ufpe.cin.android.calculadora
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
+import org.w3c.dom.Text
+import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+    }
+
+
+    // Listener para os botoes, pegando o valor do botao e atribuindo-o ao EditText.
+    fun buttonClick(v: View) {
+        var editText = findViewById<EditText>(R.id.text_calc)
+        var texto = editText.text.toString()
+        var textoBotao = (v as Button).text.toString()
+
+        var calculo = texto + textoBotao
+
+        // Caso o texto do botao seja o igual, ele vai tentar validar o calculo.
+        if (textoBotao == "=") {
+            try {
+                var result = eval(texto).toString()
+                var textoResultado = findViewById<TextView>(R.id.text_info)
+                textoResultado.text = result
+            } catch (e: Exception) {
+                // Mensagem de erro se o calculo estiver de forma errada
+                Toast.makeText(this, "Calculo invalido! Verifique o calculo e corrija.", Toast.LENGTH_SHORT).show()
+            }
+        } else if (textoBotao == "C") { // Se o texto do botao for C, ele limpa o calculo
+            editText.setText("")
+        } else { // Atribui o texto do EditText com o calculo, no caso o botao apertado.
+            editText.setText(calculo)
+        }
     }
 
 
